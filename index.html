@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+
+<title>Cone Club Coesfeld V2</title>
+
+<html lang="de">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Cone Club Coesfeld</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+<div class="lobby-header">
+
+    <div>
+        <h1>🎳 Cone Club Coesfeld</h1>
+    </div>
+
+    <div class="header-buttons">
+
+        <button class="btn"
+                onclick="window.location.href='geld.html'">
+            💰 Geld
+        </button>
+
+        <button class="btn"
+                onclick="window.location.href='runden.html'">
+            🎯 Runden
+        </button>
+
+        <button class="btn" onclick="window.location.href='kegelbahn.html'">
+    🎳 Kegelbahn
+</button>
+
+    </div>
+
+</div>
+
+<button onclick="createGame()">
+Neuer Kegelabend
+</button>
+
+<hr>
+
+<h2 class="section-title">🎳 Saison 2026</h2>
+
+<div id="season-games"></div>
+
+<h2 class="section-title">⭐ Spezial-Kegeln</h2>
+
+<div id="special-games"></div>
+
+<button id="newSpecialGame" class="primary-btn">
+    ➕ Spezial-Kegeln hinzufügen
+</button>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="js/supabase.js"></script>
+
+<script src="js/lobby.js"></script>
+
+</body>
+
+</html>
