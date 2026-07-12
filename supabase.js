@@ -31,10 +31,9 @@ async function saveGameToCloud() {
     const gameId = getCurrentGameId();
     const gameData = getGameData();
 
+    // Hat sich im Spiel etwas geändert?
     const hasChanges =
-        gameData.clicks.flat().some(v => v > 0) ||
-        gameData.eingabetext.Kegelbahn.some(v => v) ||
-        gameData.eingabetext.Runden.some(v => v);
+        gameData.clicks.flat().some(v => v > 0);
 
     // Status NICHT überschreiben, wenn Feierabend
     let status;

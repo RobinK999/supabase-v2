@@ -106,6 +106,10 @@ document.getElementById("gameTitle").textContent =
     20.0
   ]
 ];
+
+    let guestPlayer = null;
+
+
     const clicks = Array.from({length: strafen.length}, () => Array(spieler.length).fill(0));
     let specialTriggers = { "Alle 9ne": 0, "Kranz": 0 };
     let teamCounts = { Marvin: 0, Leon: 0 };
@@ -116,8 +120,6 @@ document.getElementById("gameTitle").textContent =
       Leon: [0, 1, 2, 3, 4]  // Robin, Leon, Max, Marvin, Daniel
     };
 
-    const eingabetext = { Kegelbahn: Array(spieler.length).fill(""), Runden: Array(spieler.length).fill("") };
-    const textLocked = { Kegelbahn: Array(spieler.length).fill(false), Runden: Array(spieler.length).fill(false) };
     const spielstrafen = [Array(spieler.length).fill(""), Array(spieler.length).fill("")];
     spielstrafen[0][0] = "3.00"; spielstrafen[1][0] = "2.00";
     const spielstrafenLocked = [Array(spieler.length).fill(false), Array(spieler.length).fill(false)];

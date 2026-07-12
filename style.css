@@ -423,51 +423,72 @@
 
 }
 
+
+.small-btn {
+    padding: 8px 14px;
+    font-size: 13px;
+}
+
+
+
+/* ===========================
+   Statistik
+=========================== */
+
 .stats-grid{
 
-    display:grid;
-
-    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-
+    display:flex;
+    align-items:center;
+    justify-content:center;
     gap:18px;
-
-    margin-top:20px;
+    margin:25px 0;
 
 }
 
 .stat-card{
 
-    background:white;
+    width:110px;
+    min-height:95px;
 
-    border-radius:18px;
+    background:#fff;
 
-    padding:22px;
+    border-radius:14px;
+
+    padding:10px;
 
     text-align:center;
 
-    box-shadow:0 8px 20px rgba(0,0,0,.08);
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
 
     transition:.2s;
 
 }
 
-.stat-card:hover{
+.team-card{
+
+    cursor:pointer;
+
+}
+
+.team-card:hover{
 
     transform:translateY(-3px);
+
+    box-shadow:0 10px 22px rgba(0,0,0,.18);
 
 }
 
 .stat-icon{
 
-    font-size:34px;
+    font-size:24px;
 
-    margin-bottom:10px;
+    margin-bottom:6px;
 
 }
 
 .stat-title{
 
-    font-size:15px;
+    font-size:13px;
 
     color:#666;
 
@@ -475,10 +496,50 @@
 
 .stat-value{
 
-    font-size:34px;
+    font-size:24px;
 
     font-weight:bold;
 
-    margin-top:10px;
+    margin-top:4px;
+
+}
+
+.stats-gap{
+
+    width:45px;
+
+}
+
+/* ===========================
+   Lobby Header
+=========================== */
+
+.lobby-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-start;
+
+    margin-bottom:25px;
+
+}
+
+.header-buttons{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:10px;
+
+    min-width:140px;
+
+}
+
+.header-buttons .btn{
+
+    width:100%;
 
 }
