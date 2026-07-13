@@ -128,7 +128,13 @@ document.getElementById("gameTitle").textContent =
     const gezahlt = Array(spieler.length).fill("");
     let history = [];
     const offeneStrafen = Array(spieler.length).fill("");
-    
+    const eingabetext = {
+    Kegelbahn: Array(spieler.length).fill("")
+};
+
+const textLocked = {
+    Kegelbahn: Array(spieler.length).fill(false)
+};
    async function initGame() {
 
     const gameId = getCurrentGameId();
