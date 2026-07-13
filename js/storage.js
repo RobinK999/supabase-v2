@@ -12,7 +12,8 @@ function getGameData() {
         gezahlt,
         offeneStrafen,
         specialTriggers,
-        teamCounts
+        teamCounts,
+        guestPlayer: guestPlayer,
     };
 }
 
@@ -28,11 +29,9 @@ function resetGameData() {
 
     ausstandLocked.fill(false);
 
-    eingabetext.Kegelbahn.fill("");
-    eingabetext.Runden.fill("");
+    
 
-    textLocked.Kegelbahn.fill(false);
-    textLocked.Runden.fill(false);
+   
 
     spielstrafen.forEach(row => row.fill(""));
     spielstrafenLocked.forEach(row => row.fill(false));
@@ -59,12 +58,11 @@ function applyGameData(data) {
     ausstandLocked.length = spieler.length;
     gezahlt.length = spieler.length;
     offeneStrafen.length = spieler.length;
+    guestPlayer = data.guestPlayer || null;
 
-    eingabetext.Kegelbahn.length = spieler.length;
-    eingabetext.Runden.length = spieler.length;
+   
 
-    textLocked.Kegelbahn.length = spieler.length;
-    textLocked.Runden.length = spieler.length;
+
 
     spielstrafen.forEach(r => r.length = spieler.length);
     spielstrafenLocked.forEach(r => r.length = spieler.length);

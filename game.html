@@ -8,6 +8,7 @@
 
 
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/game.css">
 
 
   <body>
@@ -55,120 +56,87 @@
   
   <div class="card">
 
-    <div class="toolbar">
-<button class="btn" onclick="undo()">Zurück</button>
-<button class="btn" onclick="save()">Speichern</button>
-<button class="btn" onclick="exportData()">💾 Daten speichern</button>
-<label class="btn" style="margin-left:10px;">
-  📂 Daten laden
-  <input type="file" onchange="importData(event)" style="display:none;">
-</label>
-<button class="btn" onclick="exportPDF()">PDF exportieren</button>
-<button class="btn" onclick="finishGame()">🍻 Feierabend</button>
+  <div class="toolbar">
+
+    <button class="btn" onclick="undo()">Zurück</button>
+
+    <button class="btn" onclick="save()">Speichern</button>
+
+    <button class="btn" onclick="exportData()">💾 Daten speichern</button>
+
+    <label class="btn">
+        📂 Daten laden
+        <input type="file" onchange="importData(event)" style="display:none;">
+    </label>
+
+    <button class="btn" onclick="exportPDF()">PDF exportieren</button>
+
+    <button class="btn" onclick="finishGame()">🍻 Feierabend</button>
+
+    <!-- schiebt alles nach rechts -->
+    <div style="flex:1;"></div>
+
+    <button class="btn" onclick="openGuestModal()">
+        👤 Gast hinzufügen
+    </button>
+
 </div>
 
 </div>
     
-  <div class="stats-grid">
+<div class="stats-grid">
 
-<div class="stat-card">
+    <!-- Alle 9 -->
+    <div class="stat-card small-stat">
+        <div class="stat-icon">🎳</div>
+        <div class="stat-title">Alle 9</div>
+        <div class="stat-value" id="alle9Count">0</div>
+    </div>
 
-<div class="stat-icon">🎳</div>
+    <!-- Kranz -->
+    <div class="stat-card small-stat">
+        <div class="stat-icon">👑</div>
+        <div class="stat-title">Kranz</div>
+        <div class="stat-value" id="kranzCount">0</div>
+    </div>
 
-<div class="stat-title">
+    <div class="stats-gap"></div>
 
-Alle 9
+    <!-- Team Marvin -->
+    <div class="stat-card small-stat team-card"
+         onclick="incrementTeam('Marvin')">
+        <div class="stat-icon">🔵</div>
+        <div class="stat-title">Team Marvin</div>
+        <div class="stat-value" id="MarvinCount">0</div>
+    </div>
 
-</div>
-
-<div class="stat-value" id="alle9Count">
-
-0
-
-</div>
-
-</div>
-
-<div class="stat-card">
-
-<div class="stat-icon">👑</div>
-
-<div class="stat-title">
-
-Kranz
-
-</div>
-
-<div class="stat-value" id="kranzCount">
-
-0
-
-</div>
+    <!-- Team Leon -->
+    <div class="stat-card small-stat team-card"
+         onclick="incrementTeam('Leon')">
+        <div class="stat-icon">🟠</div>
+        <div class="stat-title">Team Leon</div>
+        <div class="stat-value" id="LeonCount">0</div>
+    </div>
 
 </div>
 
-<div class="stat-card">
-
-<div class="stat-icon">🔵</div>
-
-<div class="stat-title">
-
-Team Marvin
-
-</div>
-
-<div class="stat-value" id="MarvinCount">
-
-0
-
-</div>
-
-</div>
-
-<div class="stat-card">
-
-<div class="stat-icon">🟠</div>
-
-<div class="stat-title">
-
-Team Leon
-
-</div>
-
-<div class="stat-value" id="LeonCount">
-
-0
-
-</div>
-
-</div>
-
-</div>
-
-<!-- === PDF Export === -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script>
-</script>
-    
 <table id="tabelle"></table>
 
-    <div style="margin-top:14px;">
-  <button class="btn" onclick="openResetModal()">Reset</button>
+<div style="margin-top:14px;">
+    <button class="btn" onclick="openResetModal()">Reset</button>
 </div>
- 
-    
-    <!-- Reset Modal -->
+
+<!-- Reset Modal -->
 <div id="resetModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:9999;">
   <div style="max-width:520px; margin:12vh auto; background:#fff; padding:18px; border-radius:10px; box-shadow:0 10px 30px rgba(0,0,0,0.25);">
     <div style="font-size:1.15rem; font-weight:800; margin-bottom:12px;">
       Bist du dir ganz sicher alles zu löschen?
     </div>
+
     <div style="margin-bottom:14px; line-height:1.35;">
       Dies ist unwiderruflich und kostet dich bei falscher Benutzung alle Strafen.
     </div>
+
     <div style="display:flex; gap:10px; justify-content:flex-end;">
       <button class="btn" onclick="closeResetModal()">Abbruch, Abbruch, Abbruch</button>
       <button class="btn" style="font-weight:800;" onclick="doReset()">Ja ich gehe auf Risiko</button>
@@ -228,10 +196,6 @@ Team Leon
     gezahlt.length = spieler.length;
     offeneStrafen.length = spieler.length;
 
-    eingabetext.Kegelbahn.length = spieler.length;
-    eingabetext.Runden.length = spieler.length;
-    textLocked.Kegelbahn.length = spieler.length;
-    textLocked.Runden.length = spieler.length;
 
     spielstrafen.forEach(r => r.length = spieler.length);
     spielstrafenLocked.forEach(r => r.length = spieler.length);
@@ -276,50 +240,67 @@ function closeGuestModal() {
   document.getElementById("guestModal").style.display = "none";
 }
 
-function confirmGuest() {
-  if (GAME_FINISHED) return;
-  const input = document.getElementById("guestName");
-  const name = (input.value || "").trim();
+async function confirmGuest() {
 
-  if (!name) {
-    alert("Bitte einen Namen eingeben.");
-    input.focus();
-    return;
-  }
+    if (GAME_FINISHED) return;
 
-  // optional: doppelte Namen verhindern
-  if (spieler.includes(name)) {
-    alert("Den Namen gibt es schon.");
-    input.focus();
-    return;
-  }
+    const input = document.getElementById("guestName");
+    const name = input.value.trim();
 
-  saveState(); // wichtig für Undo!
+    if (!name) {
+        alert("Bitte einen Namen eingeben.");
+        input.focus();
+        return;
+    }
 
-  // 1) Spieler hinzufügen
-  spieler.push(name);
+    if (spieler.includes(name)) {
+        alert("Den Namen gibt es bereits.");
+        return;
+    }
 
-  // 2) Alle Datenstrukturen verlängern
-  aktiv.push(true);
+    saveState();
 
-  clicks.forEach(row => row.push(0));
+    // Spieler hinzufügen
+    spieler.push(name);
+    guestPlayer = name;
+    GUEST_INDEX = spieler.length - 1;
 
-  eingabetext.Kegelbahn.push("");
-  eingabetext.Runden.push("");
-  textLocked.Kegelbahn.push(false);
-  textLocked.Runden.push(false);
+    // Aktiv
+    aktiv.push(true);
 
-  spielstrafen.forEach(r => r.push(""));
-  spielstrafenLocked.forEach(r => r.push(false));
+    // Klickfelder
+    clicks.forEach(row => row.push(0));
 
-  ausstand.push("");
-  ausstandLocked.push(false);
+    // Texte
 
-  gezahlt.push("");
-  offeneStrafen.push("");
+    if (eingabetext.Runden) {
+        eingabetext.Runden.push("");
+    }
 
-  closeGuestModal();
-  render();
+
+    if (textLocked.Runden) {
+        textLocked.Runden.push(false);
+    }
+
+    // Spielstrafen
+    spielstrafen.forEach(r => r.push(""));
+    spielstrafenLocked.forEach(r => r.push(false));
+
+    // Geld
+    ausstand.push("");
+    ausstandLocked.push(false);
+
+    gezahlt.push("");
+    offeneStrafen.push("");
+
+    // Historie
+    history.push([]);
+
+    closeGuestModal();
+
+render();
+
+await saveGameToCloud();
 }
 
    
@@ -454,12 +435,7 @@ function doReset() {
   ausstandLocked.length = BASE_SPIELER_ANZAHL;
   gezahlt.length = BASE_SPIELER_ANZAHL;
 
-  // Kegelbahn/Runden behalten
-  eingabetext.Kegelbahn.length = BASE_SPIELER_ANZAHL;
-  eingabetext.Runden.length = BASE_SPIELER_ANZAHL;
-  textLocked.Kegelbahn.length = BASE_SPIELER_ANZAHL;
-  textLocked.Runden.length = BASE_SPIELER_ANZAHL;
-
+  
   // Offene Strafen behalten
   offeneStrafen.length = BASE_SPIELER_ANZAHL;
 
@@ -534,7 +510,7 @@ const strafenOrdered = pumpeRow ? [pumpeRow, ...restRows] : restRows;
      // --- Podium (1/2/3) nach Gesamtbasis ohne Bonus-Geld ---
 const gesamtBasis = spieler.map((_, i) => {
   const strafe = summen[i];
-  const beitrag = 15;
+  const beitrag = (spieler[i] === guestPlayer) ? 0 : 15;
   const ausstandWert = ausstand[i] === "2.50" ? 2.5 : 0;
   const spielstrafeSumme = spielstrafen.reduce((sum, r) => sum + (parseFloat(r[i]) || 0), 0);
   const offen = parseFloat(offeneStrafen[i]) || 0;
@@ -630,17 +606,6 @@ html += "</tr></thead><tbody>";
   });
   html += "</tr>";
 
-  // --- Kegelbahn / Runden ---
-  ["Kegelbahn", "Runden"].forEach(label => {
-    html += `<tr><td>${label}</td>`;
-    eingabetext[label].forEach((v, i) => {
-      const dis = !aktiv[i] ? "disabled" : "";
-      const pod = podiumClass(i);
-    html += `<td class="${pod}"><input type="text" value="${v}" onchange="lockText('${label}', ${i}, this.value)" ${dis}></td>`;
-    });
-    html += "</tr>";
-  });
-
   // --- Spielstrafe ---
   spielstrafen.forEach((row, r) => {
     html += `<tr><td>Spielstrafe</td>`;
@@ -662,9 +627,15 @@ html += "</tr></thead><tbody>";
   });
 
   // --- Mitgliedsbeitrag ---
-  html += "<tr><td>Mitglieds<br>beitrag</td>" +
-  spieler.map((_, i) => `<td class="${podiumClass(i)}">15.00</td>`).join("") +
-  "</tr>";
+html += "<tr><td>Mitglieds<br>beitrag</td>" +
+spieler.map((_, i) => {
+
+    const beitrag = (spieler[i] === guestPlayer) ? 0 : 15;
+
+    return `<td class="${podiumClass(i)}">${beitrag}</td>`;
+
+}).join("") +
+"</tr>";
 
   // --- Pumpenkönig / 2. Platz ---
   html += "<tr><td>Pumpenkönig / 2. Platz</td>" +
@@ -702,7 +673,7 @@ const aktiveIndices = spieler.map((_, i) => i).filter(i => aktiv[i]);
 // Durchschnitt NUR aus: Strafen + Beitrag + Ausstand + Spielstrafe + Bonus (kein OffeneStrafen)
 const gesamtAktive = aktiveIndices.map(i => {
   const strafe = summen[i];
-  const beitrag = 15;
+  const beitrag = (spieler[i] === guestPlayer) ? 0 : 15;
   const ausstandWert = ausstand[i] === "2.50" ? 2.5 : 0;
 
   let extraPlatz = 0;
@@ -720,8 +691,12 @@ const durchschnittAktiv =
     : 0;
 
 spieler.forEach((_, i) => {
+
   const strafe = summen[i];
-  const beitrag = 15;
+
+  // Gast zahlt keinen Mitgliedsbeitrag
+ const beitrag = (spieler[i] === guestPlayer) ? 0 : 15;
+
   const ausstandWert = ausstand[i] === "2.50" ? 2.5 : 0;
 
   let extraPlatz = 0;
@@ -738,6 +713,7 @@ spieler.forEach((_, i) => {
   } else {
     html += `<td class="${podiumClass(i)}" style="color:blue;">${durchschnittAktiv.toFixed(2)}</td>`;
   }
+
 });
 
 html += "</tr>";
