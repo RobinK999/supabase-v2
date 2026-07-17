@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+
+<meta charset="UTF-8">
+
+<title>Geld</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+<header class="app-header">
+
+<button class="nav-button"
+onclick="window.location.href='index.html'">
+
+← Zurück
+
+</button>
+
+<div class="header-center">
+
+<div class="header-title">
+
+💰 Geld
+
+</div>
+</header>
+
+<div class="card">
+
+    <h2>Geldübersicht</h2>
+
+    <table id="geldTabelle"></table>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="js/supabase.js"></script>
+<script src="js/storage.js"></script>
+
+
+<script>
+
+let spieler = [];
+let termine = [];
+
+async function loadGames() {
+
+    const { data, error } = await supabaseClient
+        .from("games")
+        .select("id, date, game_data")
+        .eq("status", "finished")
+        .order("date");
+
+    if (error) {
+        console.error(error);
+        return;
+    }
+
+    termine = data;
+
+    // Spielernamen aus dem ersten abgeschlossenen Spiel übernehmen
+    if (data.length > 0 && data[0].game_data?.spieler) {
+        spieler = data[0].game_data.spieler;
+    }
+
+}
+
+async function updateCurrentPayments() {
+    console.log("updateCurrentPayments gestartet");
+    // Letzten abgeschlossenen Kegelabend laden
+    const { data: game, error } = await supabaseClient
+        .from("games")
+        .select("*")
+        .eq("status", "finished")
+        .order("date", { ascending: false })
+        .limit(1)
+        .single();
+
+    if (error) {
+        console.error(error);
+        return;
+    }
+
+    const data = game.game_data;
+    const rows = [];
+
+    data.spieler.forEach((name, i) => {
+
+        // Gastspieler ignorieren
+        if (name === data.guestPlayer) return;
+
+        const gesamt = parseFloat(data.gesamtstrafen[i]) || 0;
+        const gezahlt = parseFloat(data.gezahlt[i]) || 0;
+        const aktuellOffen = Math.max(0, gesamt - gezahlt);
+
+        rows.push({
+            game_id: game.id,
+            player_name: name,
+            amount: aktuellOffen,
+            paid: aktuellOffen <= 0
+        });
+
+    });
+
+    // Alte Payments löschen
+    const { error: deleteError } = await supabaseClient
+        .from("payments")
+        .delete()
+        .eq("game_id", game.id);
+
+    if (deleteError) {
+        console.error(deleteError);
+        return;
+    }
+
+    // Neue Payments speichern
+    const { error: insertError } = await supabaseClient
+        .from("payments")
+        .insert(rows);
+
+    if (insertError) {
+        console.error(insertError);
+        return;
+    }
+   
+    // Ersten nicht begonnenen Spieltag laden
+const { data: nextGame, error: nextGameError } = await supabaseClient
+    .from("games")
+    .select("*")
+    .eq("status", "new")
+    .order("date", { ascending: true })
+    .limit(1)
+    .single();
+
+if (nextGameError) {
+    console.error(nextGameError);
+    return;
+}
+
+const gameData = nextGame.game_data;
+
+gameData.offeneStrafen = gameData.spieler.map(name => {
+    const payment = rows.find(p => p.player_name === name);
+    return payment ? payment.amount.toString() : "0";
+});
+
+console.log("Neue offene Strafen:", gameData.offeneStrafen);
+
+const { error: updateError } = await supabaseClient
+    .from("games")
+    .update({
+        game_data: gameData
+    })
+    .eq("id", nextGame.id);
+
+console.log("Update Error:", updateError);
+
+if (updateError) {
+    console.error(updateError);
+    return;
+}
+
+    console.log("Payments aktualisiert:", rows);
+    console.log("Offene Strafen in nächsten Spieltag übernommen.");
+
+}
+
+async function loadCurrentPayments() {
+
+    const { data, error } = await supabaseClient
+        .from("payments")
+        .select("player_name, amount")
+        .eq("paid", false);
+
+    if (error) {
+        console.error(error);
+        return [];
+    }
+
+    return data;
+}
+
+
+function renderGeldTabelle(payments) {
+
+    const table = document.getElementById("geldTabelle");
+
+    let html = "<thead><tr><th>Status</th>";
+
+    spieler.forEach(name => {
+        html += `<th>${name}</th>`;
+    });
+
+    html += "</tr></thead><tbody>";
+
+    termine.forEach(game => {
+
+    const datum = new Date(game.date)
+        .toLocaleDateString("de-DE");
+
+    html += `<tr><td>${datum}</td>`;
+
+    spieler.forEach(() => {
+        html += "<td></td>";
+    });
+
+    html += "</tr>";
+
+});
+
+    html += "<tr class='gesamtbilanz'>";
+    html += "<td><b>Aktuell Offen</b></td>";
+
+    spieler.forEach(name => {
+
+    const eintrag = payments.find(p => p.player_name === name);
+
+    const amount = eintrag ? Number(eintrag.amount) : 0;
+
+    const bgColor = amount === 0
+        ? "#d6eaff"   // hellblau
+        : "#f8d7da";  // hellrot
+
+    html += `
+        <td style="background:${bgColor};">
+            <b>${amount.toFixed(2)} €</b>
+        </td>
+    `;
+
+});
+
+    html += "</tr>";
+
+    html += "</tbody>";
+
+    table.innerHTML = html;
+
+}
+
+(async () => {
+    
+    await updateCurrentPayments();
+    await loadGames();
+
+    const payments = await loadCurrentPayments();
+
+    renderGeldTabelle(payments);
+
+})();
+
+</script>
+
+</body>
