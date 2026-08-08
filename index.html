@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+
+<title>Cone Club Coesfeld V2</title>
+
+<html lang="de">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Cone Club Coesfeld</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+<div class="lobby-header">
+
+    <div>
+        <h1>🎳 Cone Club Coesfeld</h1>
+    </div>
+
+    <div class="header-buttons">
+
+        <button class="btn"
+                onclick="window.location.href='geld.html'">
+            💰 Geld
+        </button>
+
+        <button class="btn"
+                onclick="window.location.href='runden.html'">
+            🎯 Runden
+        </button>
+
+        <button class="btn" onclick="window.location.href='kegelbahn.html'">
+    🎳 Kegelbahn
+</button>
+
+    </div>
+
+</div>
+
+<button onclick="createGame()">
+Neuer Kegelabend
+</button>
+
+<button id="loginButton" onclick="openLoginModal()">
+    Anmelden
+</button>
+
+<hr>
+
+<h2 class="section-title">🎳 Saison 2026</h2>
+
+<div id="season-games"></div>
+
+<h2 class="section-title">⭐ Spezial-Kegeln</h2>
+
+<div id="special-games"></div>
+
+<button id="newSpecialGame" class="primary-btn">
+    ➕ Spezial-Kegeln hinzufügen
+</button>
+
+</div>
+<!-- Anmelden Modal -->
+<div id="loginModal" class="modal" style="display:none;">
+
+    <div class="modal-content">
+
+        <h2>Anmelden</h2>
+
+        <p>
+            Gib hier deinen Benutzernamen ein und bestätige dass du nicht Grün Wählst.
+        </p>
+
+        <label for="loginName">Benutzername</label>
+
+<input
+    type="text"
+    id="loginName"
+    placeholder="Benutzername"
+    autocomplete="off"
+>
+
+<label for="loginCode">Vereinscode</label>
+
+<input
+    type="password"
+    id="loginCode"
+    placeholder="Vereinscode"
+    autocomplete="off"
+>
+
+        <div class="modal-buttons">
+
+            <button onclick="closeLoginModal()">
+                Abbrechen
+            </button>
+
+            <button onclick="confirmLogin()">
+                Befehl bestätigen
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/lobby.js"></script>
+
+
+
+<script>
+
+function openLoginModal() {
+
+    document.getElementById("loginName").value = "";
+    document.getElementById("loginCode").value = "";
+
+    document.getElementById("loginModal").style.display = "flex";
+
+    setTimeout(() => {
+        document.getElementById("loginName").focus();
+    }, 50);
+}
+
+function closeLoginModal() {
+
+    document.getElementById("loginModal").style.display = "none";
+
+}
+
+
+async function confirmLogin() {
+
+    const name = document
+        .getElementById("loginName")
+        .value
+        .trim();
+
+    const code = document
+        .getElementById("loginCode")
+        .value
+        .trim();
+
+    if (!name) {
+        alert("Bitte einen Benutzernamen eingeben.");
+        return;
+    }
+
+    if (!code) {
+        alert("Bitte den Vereinscode eingeben.");
+        return;
+    }
+
+    // Erlaubte Spieler
+    const erlaubteSpieler = [
+        "Leon",
+        "Fabian",
+        "Felix",
+        "Daniel",
+        "Stevo",
+        "Max",
+        "Linus",
+        "Robin",
+        "Mike",
+        "Marvin"
+    ];
+
+    if (!erlaubteSpieler.includes(name)) {
+        alert("Dieser Benutzername ist nicht bekannt.");
+        return;
+    }
+
+    const { data, error } =
+        await supabaseClient.auth.signInWithPassword({
+            email: "coneclub@coneclub.de",
+            password: code
+        });
+
+    if (error) {
+
+        console.error("Login-Fehler:", error);
+
+        alert("Vereinscode ist falsch.");
+        return;
+    }
+
+    // Spielername merken
+    localStorage.setItem(
+        "coneClubUsername",
+        name
+    );
+
+    // App auf angemeldet setzen
+    setLoggedIn(true);
+
+    closeLoginModal();
+
+    alert("Anmeldung erfolgreich.");
+}
+
+</script>
+
+</body>
+
+</html>
