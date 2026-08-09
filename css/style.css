@@ -608,7 +608,7 @@
    Zuschauer-Modus
    ========================= */
 
-body.readonly-mode input:not(#loginName),
+body.readonly-mode input:not(#loginName):not(#loginCode),
 body.readonly-mode textarea,
 body.readonly-mode select {
     pointer-events: none;
